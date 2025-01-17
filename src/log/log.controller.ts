@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Logger ,Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { LogService } from './log.service';
 import { CreateLogDto } from './dto/create-log.dto';
 import { UpdateLogDto } from './dto/update-log.dto';
@@ -6,10 +6,30 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller('log')
 export class LogController {
+  private readonly logger = new Logger(LogController.name);
   constructor(private readonly logService: LogService) {}
+
+
+
+  @MessagePattern('process_data') // Pattern du message attendu
+    async processData(data: any) {
+      console.log("sa marche trop bien",data);
+      
+      // Log les données reçues
+      return { status: 'success', received: data };
+    }
     
-  @MessagePattern({ cmd: 'handle_message' })
+  // @MessagePattern({cmd:'*'})
+  // async haMessage(data: any) {
+  //   console.log("sa marche propre", data);
+    
+  //   return this.logService.handleMessage(data);
+  // }
+
+  @MessagePattern({cmd:'process_data'})
   async handleMessage(data: any) {
+    console.log("sa marche propre", data);
+    
     return this.logService.handleMessage(data);
   }
   

@@ -8,6 +8,10 @@ import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { AutorisationModule } from './autorisation/autorisation.module';
 import * as Joi from '@hapi/joi';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { LoggingInterceptor } from './logging.interceptor';
+
+
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -24,6 +28,11 @@ import * as Joi from '@hapi/joi';
    UtilisateursModule, 
    DatabaseModule, AutorisationModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass:LoggingInterceptor
+    }
+  ],
 })
 export class AppModule {}
