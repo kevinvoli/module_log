@@ -3,17 +3,25 @@ import { LogService } from './log.service';
 import { LogController } from './log.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Logs } from './entities/log.entity';
-import { Utilisateurs } from 'src/utilisateurs/entities/utilisateur.entity';
-import { UtilisateursService } from 'src/utilisateurs/utilisateurs.service';
+
+import { Permissions } from 'src/auth/entities/permission.entity';
+import { CaslAbilityFactory } from 'src/casl/casl-ability.factory';
+import { ConfigService } from '@nestjs/config';
+import { EntityLoader } from 'src/casl/entity-loader.service';
 
 @Module({
   imports:[
     TypeOrmModule.forFeature([
       Logs,
-      Utilisateurs,
+      Permissions
     ])
   ],
   controllers: [LogController],
-  providers: [LogService, UtilisateursService],
+  providers: [
+    LogService,
+    CaslAbilityFactory,
+    ConfigService,
+    EntityLoader
+  ],
 })
 export class LogModule {}

@@ -1,8 +1,11 @@
-import { Controller, Logger ,Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Logger ,Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
 import { LogService } from './log.service';
 import { CreateLogDto } from './dto/create-log.dto';
 import { UpdateLogDto } from './dto/update-log.dto';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
+import { PoliciesGuard } from 'src/casl/guards/policies.guard';
+import { CheckPolicies } from 'src/casl/decorators/policies.decorator';
+import { Action } from 'src/auth/entities/permission.entity';
 
 @Controller('log')
 export class LogController {
@@ -11,6 +14,10 @@ export class LogController {
 
 
 
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies(
+    (ability) => ability.can(Action.Read, 'Utilisateurs')
+  )
   @MessagePattern('process_data') // Pattern du message attendu
     async processData(data: any) {
       console.log("sa marche trop bien",data);
@@ -18,75 +25,90 @@ export class LogController {
       // Log les données reçues
       return { status: 'success', received: data };
     }
-    
-  // @MessagePattern({cmd:'*'})
-  // async haMessage(data: any) {
-  //   console.log("sa marche propre", data);
-    
-  //   return this.logService.handleMessage(data);
-  // }
 
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies(
+    (ability) => ability.can(Action.Read, 'Utilisateurs')
+  )
   @MessagePattern({cmd:'process_data'})
   async handleMessage(data: any) {
     console.log("sa marche propre", data);
-    
     return this.logService.handleMessage(data);
   }
   
+
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies(
+    (ability) => ability.can(Action.Read, 'Utilisateurs')
+  )
+  @UsePipes(new ValidationPipe({
+    transform: true, // Cela transforme les objets bruts en instances de DTO
+    whitelist: true, // Cela supprime les propriétés non définies dans le DTO
+    forbidNonWhitelisted: true, 
+    exceptionFactory: (errors) =>{
+    const formattedErrors = errors.map((err) => ({
+      property: err.property,
+      constraints: err.constraints,
+    }));
+    return new RpcException(formattedErrors);
+    
+  }}))
  @MessagePattern({cmd:'create_log'})
    create(@Payload() createLogDto: CreateLogDto) {
      return this.logService.create(createLogDto);
    }
  
-   @MessagePattern({cmd:'findAll_log'})
-   async  findAll(data?:any) {
-    console.log('find All',data);
+
+   @UsePipes(new ValidationPipe({
+    transform: true, // Cela transforme les objets bruts en instances de DTO
+    whitelist: true, // Cela supprime les propriétés non définies dans le DTO
+    forbidNonWhitelisted: true, 
+    exceptionFactory: (errors) =>{
+    const formattedErrors = errors.map((err) => ({
+      property: err.property,
+      constraints: err.constraints,
+    }));
+    return new RpcException(formattedErrors);
     
-     return await this.logService.findAll();
+  }}))
+
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies(
+    (ability) => ability.can(Action.Read, 'Utilisateurs')
+  )
+   @MessagePattern({cmd:'findAll_log'})
+   
+   async  findAll(data?:any) {
+    try {
+      console.log('find All',data);
+    
+      return await this.logService.findAll();
+    } catch (error) {
+      console.log("mon erroe:",error);
+      
+      return error
+    }
+
    }
- 
+
+   @UseGuards(PoliciesGuard)
+   @CheckPolicies(
+     (ability) => ability.can(Action.Read, 'Utilisateurs')
+   )
+   @UsePipes(new ValidationPipe({
+    transform: true, // Cela transforme les objets bruts en instances de DTO
+    whitelist: true, // Cela supprime les propriétés non définies dans le DTO
+    forbidNonWhitelisted: true, 
+    exceptionFactory: (errors) =>{
+    const formattedErrors = errors.map((err) => ({
+      property: err.property,
+      constraints: err.constraints,
+    }));
+    return new RpcException(formattedErrors);
+    
+  }}))
    @MessagePattern({cmd:'findOne_log'})
    findOne(@Payload() id: number) {
      return this.logService.findOne(id);
-   }
- 
-   @MessagePattern({cmd:'update_log'})
-   update(@Payload() updateLogDto: UpdateLogDto) {
-     return this.logService.update(updateLogDto.Id, updateLogDto);
-   }
- 
-   @MessagePattern({cmd:'remove_log'})
-   remove(@Payload() id: number) {
-     return this.logService.remove(id);
-   } 
-  
-  
-  
-  
-  
-  
-  // @Post()
-  //   async create(@Body() createLogDto: CreateLogDto) {
-  //   return await this.logService.create(createLogDto);
-  // }
-
-  // @Get()
-  // async findAll() {
-  //   return await this.logService.findAll();
-  // }
-
-  // @Get(':id')
-  // async findOne(@Param('id') id: string) {
-  //   return await this.logService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // async update(@Param('id') id: string, @Body() updateLogDto: UpdateLogDto) {
-  //   return await this.logService.update(+id, updateLogDto);
-  // }
-
-  // @Delete(':id')
-  // async remove(@Param('id') id: string) {
-  //   return await this.logService.remove(+id);
-  // }
+   }  
 }

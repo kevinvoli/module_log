@@ -4,7 +4,7 @@ import { UpdateLogDto } from './dto/update-log.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Logs } from './entities/log.entity';
 import { Repository } from 'typeorm';
-import { UtilisateursService } from '../utilisateurs/utilisateurs.service';
+// import { UtilisateursService } from '../utilisateurs/utilisateurs.service';
 import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
@@ -14,7 +14,7 @@ export class LogService {
   constructor(
       @InjectRepository(Logs)
       private readonly corbeilleRepository: Repository<Logs>,
-      private readonly utilisateursService : UtilisateursService,
+      // private readonly utilisateursService : UtilisateursService,
      
     ){ 
       this.stockServiceClient = ClientProxyFactory.create({
@@ -35,14 +35,14 @@ export class LogService {
       
   
        try {
-        const user = await this.utilisateursService.findOne(createLogDto.userId)
+        // appelt au service qui gerre les utilisateur
+        // const user = await this.utilisateursService.findOne(createLogDto.userId)
   
         const log= new Logs()
         log.module = createLogDto.module
-        log.user = user
+        // log.user = user
         log.description = createLogDto.description
         log.typeAction = createLogDto.typeAction
-        
         const ligne = await this.corbeilleRepository.save(log)
         console.log("ddd ",ligne);
   
@@ -73,56 +73,5 @@ export class LogService {
         throw new HttpException("echec de la creation de panier", HttpStatus.NOT_FOUND)
       }
     }
-  
-    async findOneByPanier(artcileId:number) {
-      try {
-        const ligne = await this.corbeilleRepository.findOne({  where: {
-          id:artcileId,
-        }})
-        return ligne
-      } catch (error) {
-        throw new HttpException("echec de la creation de panier", HttpStatus.NOT_FOUND)
-      }
-    }
-  
-  
-  
-    async findOneById(artcileId:number){
-  try {
-        const ligne = await this.corbeilleRepository.findOne({  where: {
-         id:artcileId
-        }})
-        return ligne
-      } catch (error) {
-        throw new HttpException("echec de la creation de panier", HttpStatus.NOT_FOUND)
-      }
-    }
-  
-    async update(id: number, updateLogDto: UpdateLogDto) {
-      try {
-        const ligne = await this.corbeilleRepository.findOne({
-          where:{id:id}
-        })
-        if(!ligne) throw new NotFoundException('ligne')
-        Object.assign(ligne, updateLogDto)
-        return await this.corbeilleRepository.save(ligne)
-      } catch (error) {
-        throw new HttpException("echec de la creation de panier", HttpStatus.BAD_REQUEST)
-      }
-    }
-  
-    async remove(id: number) {
-      try {
-        const ligne = await this.corbeilleRepository.findOne({
-          where: {id}
-        });
-        if(!ligne) throw new NotFoundException('ligne' );
-    
-        await this.corbeilleRepository.delete({id});
-        return true
-      } catch (error) {
-        throw new HttpException("echec de la creation de panier", HttpStatus.BAD_REQUEST)
-  
-      }
-    }
+
 }

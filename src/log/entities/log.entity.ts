@@ -1,4 +1,3 @@
-import { Utilisateurs } from "src/utilisateurs/entities/utilisateur.entity";
 import {
   Column,
   CreateDateColumn,
@@ -37,12 +36,12 @@ export class Logs {
   @Column("text", { name: "description", nullable: true })
   description: string | null;
 
-  @ManyToOne(() => Utilisateurs, (utilisateurs) => utilisateurs.logs, {
-    onDelete: "RESTRICT",
-    onUpdate: "RESTRICT",
-  })
-  @JoinColumn([{ name: "user_id", referencedColumnName: "id" }])
-  user: Utilisateurs;
+  // @ManyToOne(() => Utilisateurs, (utilisateurs) => utilisateurs.logs, {
+  //   onDelete: "RESTRICT",
+  //   onUpdate: "RESTRICT",
+  // })
+  // @JoinColumn([{ name: "user_id", referencedColumnName: "id" }])
+  // user: Utilisateurs;
 
   @CreateDateColumn({type:'datetime',  name: 'created_at'})
   createdAt: Date;

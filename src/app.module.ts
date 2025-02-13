@@ -3,13 +3,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LogModule } from './log/log.module';
 import { CorbeilleModule } from './corbeille/corbeille.module';
-import { UtilisateursModule } from './utilisateurs/utilisateurs.module';
+// import { UtilisateursModule } from './utilisateurs/utilisateurs.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
-import { AutorisationModule } from './autorisation/autorisation.module';
 import * as Joi from '@hapi/joi';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './logging.interceptor';
+import { AuthModule } from './auth/auth.module';
+import { CaslModule } from './casl/casl.module';
 
 
 
@@ -25,8 +26,10 @@ import { LoggingInterceptor } from './logging.interceptor';
     })
   }),LogModule,
    CorbeilleModule, 
-   UtilisateursModule, 
-   DatabaseModule, AutorisationModule],
+  //  UtilisateursModule, 
+   CaslModule,
+   DatabaseModule, 
+   AuthModule],
   controllers: [AppController],
   providers: [AppService,
     {

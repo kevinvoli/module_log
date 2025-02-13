@@ -30,10 +30,6 @@ export class CorbeilleService {
       const corbeille= new Corbeille()
       corbeille.contenu = createCorbeilleDto.contenu
       corbeille.typeElement = createCorbeilleDto.typeElement
-
-      
-
-      
       const ligne = await this.corbeilleRepository.save(corbeille)
       console.log("ddd ",ligne);
 
