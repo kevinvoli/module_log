@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LogModule } from './log/log.module';
 import { CorbeilleModule } from './corbeille/corbeille.module';
@@ -9,7 +8,6 @@ import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './logging.interceptor';
-import { AuthModule } from './auth/auth.module';
 import { CaslModule } from './casl/casl.module';
 
 
@@ -29,8 +27,7 @@ import { CaslModule } from './casl/casl.module';
   //  UtilisateursModule, 
    CaslModule,
    DatabaseModule, 
-   AuthModule],
-  controllers: [AppController],
+   ],
   providers: [AppService,
     {
       provide: APP_INTERCEPTOR,

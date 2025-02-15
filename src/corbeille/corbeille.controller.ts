@@ -1,15 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
 import { CorbeilleService } from './corbeille.service';
 import { CreateCorbeilleDto } from './dto/create-corbeille.dto';
 import { UpdateCorbeilleDto } from './dto/update-corbeille.dto';
 import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
+import { Action } from 'src/casl/entities/permission.entity';
+import { CheckPolicies } from 'src/casl/decorators/policies.decorator';
+import { PoliciesGuard } from 'src/casl/guards/policies.guard';
 
 @Controller('corbeille')
-export class CorbeilleController {
-  constructor(private readonly corbeilleService: CorbeilleService) {}
-
-  
-
 @UsePipes(new ValidationPipe({
   transform: true, // Cela transforme les objets bruts en instances de DTO
   whitelist: true, // Cela supprime les propriétés non définies dans le DTO
@@ -22,24 +20,21 @@ export class CorbeilleController {
   return new RpcException(formattedErrors);
   
 }}))
+export class CorbeilleController {
+  constructor(private readonly corbeilleService: CorbeilleService) {}
+
   @MessagePattern({ cmd: 'handle_message' })
    async handleMessage(data: any) {
      return this.corbeilleService.handleMessage(data);
    }
    
-   @UsePipes(new ValidationPipe({
-    transform: true, // Cela transforme les objets bruts en instances de DTO
-    whitelist: true, // Cela supprime les propriétés non définies dans le DTO
-    forbidNonWhitelisted: true, 
-    exceptionFactory: (errors) =>{
-    const formattedErrors = errors.map((err) => ({
-      property: err.property,
-      constraints: err.constraints,
-    }));
-    return new RpcException(formattedErrors);
-    
-  }}))   
-@MessagePattern({cmd:'create_corbeille'})
+
+   
+   @UseGuards(PoliciesGuard)
+       @CheckPolicies(
+         (ability) => ability.can(Action.Update, 'Logs'),
+       )
+  @MessagePattern({cmd:'create_corbeille'})
    create(@Payload() createCorbeilleDto: CreateCorbeilleDto) {
      return this.corbeilleService.create(createCorbeilleDto);
    }

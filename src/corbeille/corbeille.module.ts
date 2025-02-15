@@ -3,6 +3,8 @@ import { CorbeilleService } from './corbeille.service';
 import { CorbeilleController } from './corbeille.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Corbeille } from './entities/corbeille.entity';
+import { CaslAbilityFactory } from 'src/casl/casl-ability.factory';
+import { EntityLoader } from 'src/casl/entity-loader.service';
 
 @Module({
   imports:[
@@ -11,6 +13,11 @@ import { Corbeille } from './entities/corbeille.entity';
       ])
     ],
   controllers: [CorbeilleController],
-  providers: [CorbeilleService],
+  providers: [
+    CorbeilleService,
+    CaslAbilityFactory,
+    EntityLoader
+
+  ],
 })
 export class CorbeilleModule {}

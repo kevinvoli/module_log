@@ -1,6 +1,6 @@
 
 import { Ability } from "@casl/ability";
-import { Action } from "src/auth/entities/permission.entity";
+import { Action } from "src/casl/entities/permission.entity";
 
 import { getMetadataArgsStorage } from "typeorm";
 // Charger toutes les entités enregistrées dans TypeORM
