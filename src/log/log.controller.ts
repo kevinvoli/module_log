@@ -30,8 +30,8 @@ export class LogController {
     (ability) => ability.can(Action.Create, 'Logs')
   )
  @MessagePattern({cmd:'create_log'})
-   create(@Payload() createLogDto: CreateLogDto) {
-     return this.logService.create(createLogDto);
+   async create(@Payload() createLogDto: CreateLogDto) {
+     return await this.logService.create(createLogDto);
    }
  
 
