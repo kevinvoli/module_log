@@ -22,28 +22,23 @@ export class PoliciesGuard implements CanActivate {
         CHECK_POLICIES_KEY,
         context.getHandler(),
       ) || [];
-      console.log("les handje", handlers);
-      console.log("les permision", );
-    
+ 
     const request = context.switchToRpc().getData();
     // console.log("les user", request.user);
-    const {permission,user} = request.user
-
-    console.log("les permision",request.user);
+    const {permission,user} = request?.user || {}
 
     if (!permission) {
       throw new ForbiddenException("L'utilisateur n'est pas authentifié");
     }
     
-    const ability = await this.caslAbilityFactory.createForUser(permission);
-    handlers.forEach((handler, index) => {
-      const result = handler(ability);
-      console.log("les permision", result);
-
+    const ability = await this.caslAbilityFactory.createForPermissions(permission);
+    const isAllowed = handlers.every((handler) => {
+      return handler(ability);
     });
-    console.log("every handler: ", handlers.every((handler) => handler(ability)));
     
-    // Vérifier les permissions en utilisant les handlers
-    return handlers.every((handler) => handler(ability));
+    if (!isAllowed) {
+      throw new ForbiddenException("Vous n'avez pas les permissions nécessaires");
+    }
+    return true
   }
 }
