@@ -21,7 +21,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           keepConnectionAlive:true,
           connectTimeout:10000,
           autoLoadEntities: true,
-          // synchronize:true,
+          synchronize:true,
         })
     })
   ],

@@ -1,11 +1,13 @@
-import { IsEnum, IsOptional, IsString, IsObject } from 'class-validator';
+import { IsEnum, IsOptional, IsString, IsObject, IsNotEmpty } from 'class-validator';
 import { Action } from '../entities/permission.entity';
 
 export class CreatePermissionDto {
+  @IsNotEmpty()
   @IsString()
   module: string;
 
   @IsEnum(Action)
+  @IsNotEmpty()
   action: Action;
 
   @IsOptional()

@@ -27,7 +27,7 @@ export class LogController {
 
   @UseGuards(PoliciesGuard)
   @CheckPolicies(
-    (ability) => ability.can(Action.Create, 'Logs')
+    (ability) => ability.can(Action.Create, 'logs')
   )
  @MessagePattern({cmd:'create_log'})
    async create(@Payload() createLogDto: CreateLogDto) {
@@ -38,7 +38,7 @@ export class LogController {
 
   @UseGuards(PoliciesGuard)
   @CheckPolicies(
-    (ability) => ability.can(Action.Read, 'Logs'),
+    (ability) => ability.can(Action.Read, 'logs'),
   )
    @MessagePattern({cmd:'findAll_log'})
    async  findAll(data?:any) {
@@ -54,7 +54,7 @@ export class LogController {
 
    @UseGuards(PoliciesGuard)
    @CheckPolicies(
-     (ability) => ability.can(Action.Read, 'Logs')
+     (ability) => ability.can(Action.Read, 'logs')
    )
    @MessagePattern({cmd:'findOne_log'})
    findOne(@Payload() id: number) {
@@ -63,7 +63,7 @@ export class LogController {
 
    @UseGuards(PoliciesGuard)
    @CheckPolicies(
-     (ability) => ability.can(Action.Delete, 'Logs'),
+     (ability) => ability.can(Action.Delete, 'logs'),
    )
     @MessagePattern({cmd:'delete_log'})
     async  delete(data?:any) {
@@ -79,7 +79,7 @@ export class LogController {
 
     @UseGuards(PoliciesGuard)
     @CheckPolicies(
-      (ability) => ability.can(Action.Update, 'Logs'),
+      (ability) => ability.can(Action.Update, 'logs'),
     )
      @MessagePattern({cmd:'update_log'})
      async  update(data?:any) {

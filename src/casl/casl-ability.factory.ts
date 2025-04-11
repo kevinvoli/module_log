@@ -18,9 +18,9 @@ export class CaslAbilityFactory {
     // Charge toutes les entités disponibles
     this.subjects = this.entityLoader.getAllEntities();
   }
-  async createForPermissions(permission: CreatePermissionDto[]) {
+  async createForUser(permission: CreatePermissionDto[]) {
     
-    console.log("mes  ",permission,this.subjects);        
+    console.log("mes  ",this.subjects);        
     
     const { can, cannot, build } = new AbilityBuilder<
       Ability<[Action, string]> // On utilise `string` pour les sujets

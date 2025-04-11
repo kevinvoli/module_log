@@ -1,8 +1,8 @@
 
 import { Ability } from "@casl/ability";
-import { Action } from "src/casl/entities/permission.entity";
 
 import { getMetadataArgsStorage } from "typeorm";
+import { Action } from "../entities/permission.entity";
 // Charger toutes les entités enregistrées dans TypeORM
 const allEntities = getMetadataArgsStorage().tables.map((table) => table.target);
 
