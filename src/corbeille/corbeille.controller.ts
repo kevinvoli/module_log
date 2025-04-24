@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
+import { Controller, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
 import { CorbeilleService } from './corbeille.service';
 import { CreateCorbeilleDto } from './dto/create-corbeille.dto';
 import { UpdateCorbeilleDto } from './dto/update-corbeille.dto';

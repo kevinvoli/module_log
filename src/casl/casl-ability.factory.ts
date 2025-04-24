@@ -1,9 +1,7 @@
-import { Ability, AbilityBuilder, AbilityClass, ExtractSubjectType, InferSubjects } from '@casl/ability';
+import { Ability, AbilityBuilder, AbilityClass, InferSubjects } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+
 import { EntityLoader } from './entity-loader.service'; // Service de chargement dynamique
-import { getMetadataArgsStorage } from 'typeorm';
 
 import { Action } from './entities/permission.entity';
 import { CreatePermissionDto } from './dto/create-permission.dto';
